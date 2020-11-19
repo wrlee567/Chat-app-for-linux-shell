@@ -1,5 +1,5 @@
 CC=gcc  #compiler
-TARGET= simulation
+TARGET= sim
 
 all:
 	$(CC) asn3.c list.o -o $(TARGET)
