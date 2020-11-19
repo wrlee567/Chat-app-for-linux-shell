@@ -31,52 +31,50 @@ int create_p (int priority){
 	newPCB->msg = (p_MSG*) malloc(sizeof (p_MSG));
 	newPCB->msg->content = (char*) malloc(sizeof(char) * 50);
 
-	
 	if (newPCB == NULL ){
 		return -1;
 	}
-	
 	else{
 		List_prepend(prtyQ[priority], newPCB);
 		if (prtyQ[priority]>=0) {   //fix condition later
-		
 			printf("Success: pid%i\n", newPCB->pid);
 			return 1;
 		}
-
 		else {
-			
 			printf("failed to create the PCB\n");
-			
 			return -1;
 		}
-		
-
-	}
-	
-	
+	}	
 }
 
-// int fork_p(void*q){
-// 	if (q -> current )
-// 	{
-// 		/* code */
-// 	}
-//     return 1;
-// }
+int fork_p(){
+	if (runq )
+	{
+		Pcb * old_proc  =  List_last(runq);
+		if (create_p(old_proc->pid) ==1){
+			return 1;
+		}
+		else{
+			return -1;
+		}
+	}
+}
 
-// int kill_p(void*q, int pid){
-// 	//List current semaphore 
-// 	List_remove(q);
-//     return 1;
-// 	//List current semaphore 
-// }
-int exit_p(void*q, void * pItem){
-
+int kill_p(int pid){
 	Pcb * prcss;
-	prcss = List_last(runq);
-	if (prcss->pid != 0 || prcss_num == 0  ) {
+	
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < List_count(prtyQ[i]); j++)
+		{
+			
+			List_search(prtyQ[i], )
+		}
 		
+	}
+	
+	if (prcss->pid != 0 || prcss_num == 0  ) {
+
 		prcss = List_trim(runq);
 		printf("pid:%i is now removed\n", prcss->pid);
 		free(prcss->msg->content);
@@ -86,30 +84,47 @@ int exit_p(void*q, void * pItem){
 		prcss->msg = 0;
 		prcss = 0;
 		prcss_num--;
-		// CPU_scheduler();
 	}
-	else {
-		printf("There are still other processes, cannot exit now");
-	}
-	return -1;
+    return 1;
+	
 }
+
+// int exit_p(void*q, void * pItem){
+// 	Pcb * prcss;
+// 	prcss = List_last(runq);
+// 	if (prcss->pid != 0 || prcss_num == 0  ) {
+// 		prcss = List_trim(runq);
+// 		printf("pid:%i is now removed\n", prcss->pid);
+// 		free(prcss->msg->content);
+// 		free(prcss->msg);
+// 		free(prcss);
+// 		prcss->msg->content = 0;
+// 		prcss->msg = 0;
+// 		prcss = 0;
+// 		prcss_num--;
+// 		// CPU_scheduler();
+// 	}
+// 	else {
+// 		printf("There are still other processes, cannot exit now");
+// 	}
+// 	return -1;
+// }
 // int quantum(void* q){
 // 	return 1;
 // }
+
 // int sendf(int pid){
 // 	return 1;
 // } 
 // char receivef(void*q){
 // 	//if message not sent block receive
-
 // 	char *m  = "hi";
-
 // 	//instantly start the receive and unblock it once the thing 
 // 	return &m;
 // }
+
 // int replyf(void*q, int pid, char*msg){
 // 	return 1;
-
 // }
 
 // static int init(void * unused) {
@@ -136,7 +151,7 @@ int main(int argc, char const *argv[])
 	if (u_input == 'I' || u_input =='i')
 	{
 		
-		printf("e clicked\n");
+		printf("info on the commands \n");
 	}
 	if (u_input == 'C' || u_input == 'c')
 	{
