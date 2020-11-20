@@ -3,15 +3,15 @@
 
 typedef struct p_msg p_MSG;
 struct p_msg {
-	int destin;
-	int src; 
+	int target;
+	int source; 
 	int type;
 	char * content;
 };
 
-typedef struct sem SEM;
+typedef struct sem SEMA;
 struct sem {
-	int sid;
+	int semid;
 	int val;
 	List *sem_list;
 };
