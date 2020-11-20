@@ -12,11 +12,87 @@ int prcss_num = 0;
 
 #define SUCCESS 1
 #define FAIL -1 
+
+#define RUNNING 0
+#define READY 1 
+#define BLOCKED 2
+
 List *prtyQ[3];
 List* wait_send ;
 List* wait_rec;
 List* runq ;
 List* semap ;
+
+
+
+bool User_Comparator(void* pItem, void* pComparisonArg){
+   if (*((int*)(pItem)) == *((int*)(pComparisonArg))){
+       return 1;
+   }
+   else{
+       return 0;
+   }
+}
+
+void CPUswitcher(){
+	Pcb *p;
+	int err_chk;
+	for (int i=0; i<3; i++) {
+		if (List_count(prtyQ[i])>0) {
+			p = List_trim(prtyQ[i]);
+			// add to runQ
+			if (p) {
+				err_chk = List_append(runq, p);
+				p->state = 0;
+                // display status messages
+				if (err_chk == 0) {
+					printf("CPU process switch was successful");
+				}
+				else {
+					printf("CPU process switch has failed");
+				}
+			}
+			
+
+			// exit loop
+			break;
+		}
+	}
+	// set init proc state
+	if (p = List_last(runq)) {
+		if (p->pid == 0) {
+			p->state = 0;
+		}
+		printf("the process with pid: %i is now running. \n", p->pid);
+		
+		// if (strlen(p->msg->content) != 0) {
+		// 	display_pm(p->msg);
+		// }
+
+		// reset_pm(p->msg);
+		
+	}
+}
+
+
+//maybe a list search function 
+// void* search_singleq(){
+// 	bool User_Comparator((void *), int*);
+// 	if ((List_search(prtyQ[i], &Comparator, &pid) -> pid)   ==  target  ){
+// 		void
+// 	}
+// }
+// void*  Search_all (int target ){
+// 	bool Comparator((void *), int*);
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		for (int j = 0; j < List_count(prtyQ[i]); j++)
+// 		{
+//			0
+// 		}
+// }
+
+
 
 //functions
 int create_p (int priority){
@@ -62,17 +138,14 @@ int fork_p(){
 
 int kill_p(int pid){
 	Pcb * prcss;
-	
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < List_count(prtyQ[i]); j++)
-		{
+	// for (int i = 0; i < 3; i++)
+	// {
+	// 	for (int j = 0; j < List_count(prtyQ[i]); j++)
+	// 	{
 			
-			List_search(prtyQ[i], )
-		}
-		
-	}
-	
+	// 		List_search(prtyQ[i], )
+	// 	}
+	// }
 	if (prcss->pid != 0 || prcss_num == 0  ) {
 
 		prcss = List_trim(runq);
@@ -145,70 +218,98 @@ int main(int argc, char const *argv[])
 	runq = List_create();
 	semap = List_create();
 	char u_input; 
-	printf(" Please enter your command \n ('i' for the information on the commands \n'e' to exit the program): ");
-        scanf("%s", &u_input);
+	int priority;
+	int err_chk;
+	int pid;
 
-	if (u_input == 'I' || u_input =='i')
+	Pcb* initp = malloc(sizeof(Pcb));
+	initp -> pid = 0;
+	initp -> priority =0;
+	initp -> state = 0;
+	initp->msg = (p_MSG*) malloc(sizeof (p_MSG));
+	initp->msg->content = (char *) malloc(sizeof(char) * 50);
+
+	List_append(runq, initp);
+
+	while (List_count(runq))
 	{
 		
-		printf("info on the commands \n");
+		printf(" Please enter your command \n ('i' for the information on the commands \n'e' to exit the program): ");
+			scanf("%s", &u_input);
+
+		if (u_input == 'I' || u_input =='i')
+		{
+			printf("info on the commands \n");
+		}
+		if (u_input == 'C' || u_input == 'c'){
+			printf("Please enter Priority --- (0, 1, 2): ");
+			scanf("%d", &priority);
+			err_chk = create_p(priority);
+			break;
+		}
+		if (u_input == 'F'|| u_input == 'f')
+		{
+			err_chk = fork();
+			break;
+		}
+		if (u_input == 'K' || u_input == 'k')
+		{
+				
+				printf("Please Enter pid: ");
+				scanf("%d", &pid);
+				if (prcss_num != 0 &&  pid == 0 ) {
+					printf("This is the init so you cannot kill it.");
+					break;
+				}
+				// 
+				// list = findpid(pid, RET_QUEUE);
+				err_chk = kill_p(pid);
+					//CPU_scheduler();
+			break;
+		}
+
+		if (u_input == 'E' || u_input == 'e')
+		{
+			break;
+		}
+		if (u_input == 'Q' || u_input == 'q')
+		{
+			break;
+		}
+		if (u_input == 'S' || u_input == 's')
+		{
+			break;
+		}
+		if (u_input == 'R' || u_input == 'r')
+		{
+			break;
+		}
+		if (u_input == 'Y' || u_input == 'y')
+		{
+			break;
+		}
+		if (u_input == 'N' || u_input == 'n')
+		{
+			break;
+		}
+		if (u_input == 'P' || u_input == 'p')
+		{
+			break;
+		}
+		if (u_input == 'V' || u_input == 'v')
+		{
+			break;
+		}
+		if (u_input == 'I' || u_input == 'i')
+		{
+			break;
+		}
+		if (u_input == 'T' || u_input == 't')
+		{
+			break;
+		}
 	}
-	if (u_input == 'C' || u_input == 'c')
-	{
-		int priority;
-		printf("Please enter Priority --- (0, 1, 2): ");
-		scanf("%d", &priority);
-		int err_chk = create_p(priority);
-		
-	}
-	// if (u_input == 'F'|| u_input == 'f')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'K' || u_input == 'k')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'E' || u_input == 'e')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'Q' || u_input == 'q')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'S' || u_input == 's')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'R' || u_input == 'r')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'Y' || u_input == 'y')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'N' || u_input == 'n')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'P' || u_input == 'p')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'V' || u_input == 'v')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'I' || u_input == 'i')
-	// {
-	// 	break;
-	// }
-	// if (u_input == 'T' || u_input == 't')
-	// {
-	// 	break;
-	// }
+	
 	return 0;
 }
 
