@@ -1,1 +1,1 @@
-# CMPT-300---OS-simulation
+#Its a chat app using linux sockets!
